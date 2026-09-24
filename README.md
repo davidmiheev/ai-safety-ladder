@@ -60,8 +60,9 @@ Gotchas (verified 2026-09):
   npm behind TLS-intercepting proxies).
 - Release runtimes with `colab_stop` when idle; they burn compute units.
 
-For cloud sessions, add `COLAB_TOKEN_JSON` and `KAGGLE_API_TOKEN` as environment secrets and run
-`scripts/setup_gpu_mcp.sh` from the environment's setup script, since containers start fresh.
+For cloud sessions, add `COLAB_TOKEN_JSON` and `KAGGLE_API_TOKEN` as environment secrets. The
+SessionStart hook (`.claude/settings.json` → `scripts/session_start.sh`) runs `uv sync` and
+`setup_gpu_mcp.sh` on every fresh cloud container (~17s cold, ~2s warm); it is a no-op locally.
 
 ## Layout
 
