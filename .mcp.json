@@ -9,7 +9,7 @@
     },
     "kaggle": {
       "command": "external/kaggle-mcp-venv/bin/python",
-      "args": ["-m", "ds_agent.kaggle_mcp"],
+      "args": ["scripts/kaggle_mcp.py"],
       "env": {
         "PYTHONPATH": "external/ds-agent/src",
         "KAGGLE_MCP_TOKEN": "${KAGGLE_API_TOKEN:-}"

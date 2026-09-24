@@ -52,6 +52,14 @@ Credentials (never commit them):
 - **Kaggle**: create an API token (kaggle.com → Settings → API, `KGAT…`) and export it as `KAGGLE_API_TOKEN`
   before starting Claude Code.
 
+Gotchas (verified 2026-09):
+- `colab_upload` writes relative to `/`, not `/content` as its description says, and fails for
+  sub-paths whose parent doesn't exist there. Upload flat files, then `shutil.move` them in `colab_execute`.
+- The Kaggle server launches through `scripts/kaggle_mcp.py`, which passes `HTTPS_PROXY` /
+  `NODE_EXTRA_CA_CERTS` through to `npx mcp-remote` (ds-agent's proxy drops them, which breaks
+  npm behind TLS-intercepting proxies).
+- Release runtimes with `colab_stop` when idle; they burn compute units.
+
 For cloud sessions, add `COLAB_TOKEN_JSON` and `KAGGLE_API_TOKEN` as environment secrets and run
 `scripts/setup_gpu_mcp.sh` from the environment's setup script, since containers start fresh.
 
