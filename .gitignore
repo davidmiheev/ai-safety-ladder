@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.env
+
+# Experiment artefacts (plots, cached activations, checkpoints)
+outputs/
+*.pt
+*.safetensors
+wandb/
+
+# Third-party course material cloned locally
+external/

@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "colab": {
+      "command": "external/ds-agent/src/colab_mcp/.venv/bin/python",
+      "args": ["-m", "colab_mcp.colab_server"],
+      "env": {
+        "PYTHONPATH": "external/ds-agent/src"
+      }
+    },
+    "kaggle": {
+      "command": "external/kaggle-mcp-venv/bin/python",
+      "args": ["-m", "ds_agent.kaggle_mcp"],
+      "env": {
+        "PYTHONPATH": "external/ds-agent/src",
+        "KAGGLE_MCP_TOKEN": "${KAGGLE_API_TOKEN:-}"
+      }
+    }
+  }
+}

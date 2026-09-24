@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Safety & Interpretability Reading Path</title>
+<style>
+  :root {
+    --paper: #eee9dd;
+    --paper-dark: #e2dcc9;
+    --ink: #2b2620;
+    --ink-soft: #5c5548;
+    --rule: #c9c0a8;
+    --stamp: #8a4a2f;
+    --stamp-soft: #b3714f;
+    --accent: #3d5a4a;
+    --blog-accent: #3d5470;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    padding: 32px 18px 80px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  header { margin-bottom: 30px; border-bottom: 2px solid var(--ink); padding-bottom: 16px; }
+  .kicker {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-size: 29px;
+    margin: 0 0 8px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .progress {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 14px 0 0;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--rule);
+    margin-top: 6px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .filterbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  .filter-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    padding: 5px 11px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .section {
+    margin-top: 42px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .section-num {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--stamp);
+    border: 1px solid var(--stamp-soft);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 19px; }
+  .section-desc {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 4px 0 16px 32px;
+    max-width: 580px;
+  }
+
+  .card {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    margin-left: 32px;
+    margin-bottom: 8px;
+    background: var(--paper-dark);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule);
+    cursor: pointer;
+    transition: border-left-color 0.2s ease, opacity 0.2s ease;
+  }
+  .card:hover { border-left-color: var(--stamp-soft); }
+  .card.done { border-left-color: var(--accent); opacity: 0.55; }
+  .card.done .card-title { text-decoration: line-through; text-decoration-color: var(--ink-soft); }
+  .card.hidden { display: none; }
+
+  .box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--ink);
+    flex-shrink: 0;
+    margin-top: 3px;
+    position: relative;
+  }
+  .card.done .box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--accent);
+    font-family: Georgia, serif;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-title { font-size: 15px; line-height: 1.35; }
+  .card-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .tag {
+    border: 1px solid var(--stamp-soft);
+    color: var(--stamp);
+    padding: 1px 6px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .tag.blog { border-color: var(--blog-accent); color: var(--blog-accent); }
+  .tag.book { border-color: var(--accent); color: var(--accent); }
+  .card-note {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+  a.link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+  }
+  a.link:hover { border-bottom-style: solid; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Reading Path · Research-level</div>
+    <h1>AI Safety &amp; Interpretability</h1>
+    <div class="subhead">Blogs for the live conversation, papers for the evidence, books for the arguments. Tap a card to mark it read; filter by type below.</div>
+    <div class="progress" id="progressText">0 / 0 read</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="filterbar" id="filterbar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="blog">Blogs</button>
+      <button class="filter-btn" data-filter="arXiv">Papers</button>
+      <button class="filter-btn" data-filter="book">Books</button>
+    </div>
+  </header>
+
+  <div id="sections"></div>
+
+  <footer>
+    This field moves in blog posts and preprints more than in books — treat the Transformer Circuits Thread and the Alignment Forum as living documents, not one-time reads. Check back on both periodically.
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {
+    title: "Orientation: Blogs & Live Sources",
+    desc: "Where the field actually thinks out loud — start here for current framing before diving into papers.",
+    items: [
+      {
+        t: "Transformer Circuits Thread",
+        meta: "Anthropic Interpretability Team, ongoing",
+        tags: ["blog"],
+        note: "The primary venue for Anthropic's interpretability research — toy models of superposition, monosemanticity, circuit tracing, and monthly 'Circuits Updates' posts that read like lab notes shared before formal papers.",
+        url: "https://transformer-circuits.pub/"
+      },
+      {
+        t: "Neel Nanda's Mechanistic Interpretability blog",
+        meta: "Neel Nanda, ongoing",
+        tags: ["blog"],
+        note: "The clearest on-ramp into the field's concepts and open problems, written by a former DeepMind/now-independent researcher with a knack for concrete explanations. Start with 'A Comprehensive Mechanistic Interpretability Explainer & Glossary.'",
+        url: "https://www.neelnanda.io/mechanistic-interpretability/blog"
+      },
+      {
+        t: "Alignment Forum",
+        meta: "Community platform, ongoing",
+        tags: ["blog"],
+        note: "The main technical alignment discussion venue — higher signal-to-noise than LessWrong's general feed for research-level content. Search by tag (interpretability, RLHF, deceptive alignment) rather than reading chronologically.",
+        url: "https://www.alignmentforum.org/"
+      },
+      {
+        t: "Anthropic Alignment Science blog",
+        meta: "Anthropic, ongoing",
+        tags: ["blog"],
+        note: "Distinct from Transformer Circuits — covers behavioral and training-time alignment work: sleeper agents, sabotage evaluations, automated auditing, model welfare.",
+        url: "https://alignment.anthropic.com/"
+      },
+      {
+        t: "AI Alignment Forum's canonical reading list & Rob Miles' YouTube channel",
+        meta: "Community-maintained / Rob Miles",
+        tags: ["blog"],
+        note: "Rob Miles explains core alignment problems (mesa-optimization, instrumental convergence, corrigibility) in plain language — good for building intuition before the denser papers below.",
+        url: "https://www.youtube.com/@RobertMilesAI"
+      }
+    ]
+  },
+  {
+    title: "Math for AI Safety",
+    desc: "A mathematician's entry point, maintained by Jacob Tsimerman with Andrew Critch, Lionel Levine, Yevgeny Liokumovich, and Arul Shankar. Genuine theorems, not translated exposition.",
+    items: [
+      {
+        t: "AI Safety for Mathematicians (site overview)",
+        meta: "Tsimerman, Critch, Levine, Liokumovich, Shankar — Aug 2026",
+        tags: ["blog"],
+        note: "Framing page: why mathematicians have comparative advantage in AI safety, and a short list of open research directions aimed squarely at a math audience.",
+        url: "https://mathforaisafety.org/"
+      },
+      {
+        t: "Interpretability and Feature Manifolds",
+        meta: "mathforaisafety.org research direction",
+        tags: ["blog"],
+        note: "Treats interpretability as geometry: the linear representation hypothesis, nonlinear feature manifolds (circular day/month encodings, a Sierpiński-triangle belief-state fractal), and irreducible group representations appearing in networks trained on group operations. Closest thing here to your own algebraic-topology background.",
+        url: "https://mathforaisafety.org/research/interpretability-feature-manifolds"
+      },
+      {
+        t: "Open-Source Game Theory",
+        meta: "mathforaisafety.org research direction",
+        tags: ["blog"],
+        note: "Builds cooperation between code-transparent agents (FairBot, CUPOD, DUPOC) on Löb's theorem and provability logic. States a genuinely open problem: the outcome of DUPOC(k) vs CUPOD(k) for large k is unknown.",
+        url: "https://mathforaisafety.org/research/open-source-game-theory"
+      },
+      {
+        t: "Developing Good Heuristics",
+        meta: "mathforaisafety.org research direction",
+        tags: ["blog"],
+        note: "ARC's 'no-coincidence conjecture' formalizes the twin-prime-style heuristic (unlikely coincidences need structural explanations) as a claim about circuits, with a stated equivalence to NP vs co-NP under a stronger variant. Also covers the Matching Sampling Principle for estimating model behavior better than raw sampling.",
+        url: "https://mathforaisafety.org/research/heuristic-estimators"
+      },
+      {
+        t: "Math for AI Safety (Cornell MATH 7710 course)",
+        meta: "Lionel Levine, Fall 2024",
+        tags: ["blog"],
+        note: "A full graduate topics course predating the site above, by one of its contributors — predictive coding, power-seeking theorems, open-source game theory, coherence theorems, taught with a seminar/presentation format on primary papers.",
+        url: "https://pi.math.cornell.edu/~levine/MAIS"
+      }
+    ]
+  },
+  {
+    title: "Foundational Problem Statements",
+    desc: "The papers that named the problems everything else responds to.",
+    items: [
+      {
+        t: "Concrete Problems in AI Safety",
+        meta: "Amodei, Olah, Steinhardt, Christiano, Schulman, Mané, 2016",
+        tags: ["arXiv"],
+        note: "Names five concrete failure modes — reward hacking, negative side effects, scalable oversight, safe exploration, distributional shift — that still structure the field's taxonomy a decade later.",
+        url: "https://arxiv.org/abs/1606.06565"
+      },
+      {
+        t: "Risks from Learned Optimization in Advanced Machine Learning Systems",
+        meta: "Hubinger, van Merwijk, Mikulik, Skalse, Garrabrant, 2019",
+        tags: ["arXiv"],
+        note: "Introduces mesa-optimization and the inner/outer alignment distinction — the conceptual backbone for most deceptive-alignment discussion since.",
+        url: "https://arxiv.org/abs/1906.01820"
+      },
+      {
+        t: "Eliciting Latent Knowledge",
+        meta: "Christiano, Cotra, Xu (ARC), 2021",
+        tags: ["blog"],
+        note: "A report, not a paper, but foundational — poses the problem of extracting what a model 'knows' even when its stated reasoning is unreliable, via worked adversarial examples.",
+        url: "https://docs.google.com/document/d/1WwsnJQstPq91_Yh-Ch2XRL8H_EpsnjrC1dwZXR37PC8/edit"
+      }
+    ]
+  },
+  {
+    title: "Mechanistic Interpretability — Core Line",
+    desc: "The Anthropic interpretability team's main arc, roughly in the order it happened.",
+    items: [
+      {
+        t: "Zoom In: An Introduction to Circuits",
+        meta: "Olah, Cammarata, Schubert, Goh, Petrov, Carter, Distill 2020",
+        tags: ["arXiv"],
+        note: "Pre-LLM (vision models) but sets the founding philosophy: neural networks contain meaningful, reverse-engineerable circuits, not just statistical noise.",
+        url: "https://distill.pub/2020/circuits/zoom-in/"
+      },
+      {
+        t: "A Mathematical Framework for Transformer Circuits",
+        meta: "Elhage et al., Anthropic, 2021",
+        tags: ["blog"],
+        note: "Introduces the residual-stream view of transformers and induction heads — the toolkit most later interpretability work is built on.",
+        url: "https://transformer-circuits.pub/2021/framework/index.html"
+      },
+      {
+        t: "Toy Models of Superposition",
+        meta: "Elhage et al., Anthropic, 2022",
+        tags: ["blog"],
+        note: "Explains why individual neurons are polysemantic: models pack more features than they have dimensions. Motivates the entire sparse-autoencoder research program that follows.",
+        url: "https://transformer-circuits.pub/2022/toy_model/index.html"
+      },
+      {
+        t: "In-Context Learning and Induction Heads",
+        meta: "Olsson et al., Anthropic, 2022",
+        tags: ["blog"],
+        note: "Identifies a specific circuit responsible for a chunk of in-context learning — one of the field's cleanest examples of a fully reverse-engineered mechanism.",
+        url: "https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html"
+      },
+      {
+        t: "Towards Monosemanticity: Decomposing Language Models with Dictionary Learning",
+        meta: "Bricken, Templeton, et al., Anthropic, 2023",
+        tags: ["blog"],
+        note: "First demonstration that sparse autoencoders can pull genuinely interpretable, monosemantic features out of a real language model rather than a toy one.",
+        url: "https://transformer-circuits.pub/2023/monosemantic-features/index.html"
+      },
+      {
+        t: "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet",
+        meta: "Templeton et al., Anthropic, 2024",
+        tags: ["blog"],
+        note: "Scales SAEs to a production frontier model and finds safety-relevant features directly — 'unsafe code,' 'bias,' 'deception,' 'power-seeking' — the paper most often cited as SAEs' proof of concept.",
+        url: "https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html"
+      },
+      {
+        t: "Circuit Tracing: Revealing Computational Graphs in Language Models",
+        meta: "Ameisen, Lindsey, Pearce, Gurnee, et al., Anthropic, 2025",
+        tags: ["blog"],
+        note: "Introduces cross-layer transcoders and attribution graphs — the current state of the art for tracing a full computational path through a model for a single prompt.",
+        url: "https://transformer-circuits.pub/2025/attribution-graphs/methods.html"
+      },
+      {
+        t: "Open Problems in Mechanistic Interpretability",
+        meta: "Sharkey, Chughtai, Batson, et al. — 29 authors, 18 orgs, 2025",
+        tags: ["arXiv"],
+        note: "A field-wide stocktake naming what's actually unsolved — good corrective after reading the success stories above, and useful for orienting your own research questions.",
+        url: "https://arxiv.org/abs/2501.16496"
+      }
+    ]
+  },
+  {
+    title: "Scalable Oversight & Behavioral Alignment",
+    desc: "Getting honest, safe behavior out of models you can't fully inspect.",
+    items: [
+      {
+        t: "Training Language Models to Follow Instructions with Human Feedback (InstructGPT)",
+        meta: "Ouyang et al., OpenAI, 2022",
+        tags: ["arXiv"],
+        note: "Already on the post-training list, but belongs here too: this is the empirical starting point for 'is RLHF actually alignment, or just preference-shaped behavior.'",
+        url: "https://arxiv.org/abs/2203.02155"
+      },
+      {
+        t: "Discovering Language Model Behaviors with Model-Written Evaluations",
+        meta: "Perez et al., Anthropic, 2022",
+        tags: ["arXiv"],
+        note: "Shows LLMs can be used to generate their own behavioral evals at scale — a practical scalable-oversight technique, with some uncomfortable findings about sycophancy and stated values.",
+        url: "https://arxiv.org/abs/2212.09251"
+      },
+      {
+        t: "Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training",
+        meta: "Hubinger et al., Anthropic, 2024",
+        tags: ["arXiv"],
+        note: "Demonstrates that a deliberately backdoored model can survive standard RLHF/safety fine-tuning — the empirical case for why behavioral training alone isn't sufficient evidence of alignment.",
+        url: "https://arxiv.org/abs/2401.05566"
+      },
+      {
+        t: "Simple Probes Can Catch Sleeper Agents",
+        meta: "MacDiarmid, Maxwell, Schiefer, et al., Anthropic, 2024",
+        tags: ["blog"],
+        note: "Direct follow-up: interpretability-style linear probes on activations catch the sleeper-agent behavior that behavioral testing missed. Good paired reading with the paper above.",
+        url: "https://www.anthropic.com/research/probes-catch-sleeper-agents"
+      },
+      {
+        t: "Alignment Faking in Large Language Models",
+        meta: "Greenblatt et al., Anthropic & Redwood Research, 2024",
+        tags: ["arXiv"],
+        note: "Shows a model can strategically comply with training objectives it 'disagrees with' to preserve its existing values — the clearest real (not hypothetical) instance of the deceptive-alignment concern.",
+        url: "https://arxiv.org/abs/2412.14093"
+      }
+    ]
+  },
+  {
+    title: "Governance & Field-Wide Stocktaking",
+    desc: "Zoomed-out views of where technical safety work actually stands.",
+    items: [
+      {
+        t: "International AI Safety Report 2026",
+        meta: "Bengio et al. (chaired), international expert panel",
+        tags: ["arXiv"],
+        note: "Government-commissioned, cross-national synthesis of AI capabilities and risks — useful as a single up-to-date reference for the state of evidence, with an extensive bibliography into the primary literature.",
+        url: "https://arxiv.org/abs/2602.21012"
+      },
+      {
+        t: "Mapping Technical Safety Research at AI Companies",
+        meta: "2024–2025 literature review",
+        tags: ["arXiv"],
+        note: "A literature review plus incentives analysis of what labs actually publish on safety versus capabilities — useful for calibrating how much of the public research reflects the full picture.",
+        url: "https://arxiv.org/abs/2409.07878"
+      }
+    ]
+  },
+  {
+    title: "Books",
+    desc: "Longer arguments — for context and the public debate, not primary evidence.",
+    items: [
+      {
+        t: "Human Compatible: Artificial Intelligence and the Problem of Control",
+        meta: "Stuart Russell, 2019",
+        tags: ["book"],
+        note: "The most respected 'insider' case for why standard objective-optimization is the wrong paradigm — written by a mainstream AI textbook author (Russell & Norvig), not an outsider.",
+        url: "https://www.penguinrandomhouse.com/books/566677/human-compatible-by-stuart-russell/"
+      },
+      {
+        t: "The Alignment Problem: Machine Learning and Human Values",
+        meta: "Brian Christian, 2020",
+        tags: ["book"],
+        note: "The best narrative history of how alignment research actually developed, from bias in ML through RLHF's early days — journalistic, well-reported, good for grounding the technical papers in their history.",
+        url: "https://brianchristian.org/the-alignment-problem/"
+      },
+      {
+        t: "If Anyone Builds It, Everyone Dies",
+        meta: "Yudkowsky & Soares, 2025",
+        tags: ["book"],
+        note: "The most-discussed 2025/2026 safety book and worth reading to understand the current public debate — but read critically. Reviewers (including sympathetic ones on the EA Forum and Astral Codex Ten) note it under-argues its central technical claims and mostly restates prior positions in more accessible form rather than presenting new evidence.",
+        url: "https://ifanyonebuildsit.com/"
+      },
+      {
+        t: "Superintelligence: Paths, Dangers, Strategies",
+        meta: "Nick Bostrom, 2014",
+        tags: ["book"],
+        note: "Older and more philosophical than the technical literature above, but still the reference point most later arguments (including Yudkowsky & Soares') build on or react against — instrumental convergence, orthogonality thesis, treacherous turn.",
+        url: "https://www.stuartjrussell.com/superintelligence"
+      }
+    ]
+  }
+];
+
+const tracksEl = document.getElementById('sections');
+let totalItems = 0;
+const state = {};
+const allCards = [];
+
+DATA.forEach((track, ti) => {
+  const trackDiv = document.createElement('div');
+  trackDiv.className = 'section';
+
+  const head = document.createElement('div');
+  head.className = 'section-head';
+  head.innerHTML = `<div class="section-num">${ti + 1}</div><div class="section-title">${track.title}</div>`;
+  trackDiv.appendChild(head);
+
+  const desc = document.createElement('div');
+  desc.className = 'section-desc';
+  desc.textContent = track.desc;
+  trackDiv.appendChild(desc);
+
+  track.items.forEach((item, ii) => {
+    totalItems++;
+    const id = `${ti}-${ii}`;
+    state[id] = false;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = id;
+    card.dataset.types = item.tags.join(',');
+
+    const tagsHtml = item.tags.map(t => `<span class="tag ${t === 'blog' ? 'blog' : t === 'book' ? 'book' : ''}">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="box"></div>
+      <div class="card-body">
+        <div class="card-title">${item.t}</div>
+        <div class="card-meta">
+          <span>${item.meta}</span>
+          ${tagsHtml}
+          <a class="link" href="${item.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ open</a>
+        </div>
+        <div class="card-note">${item.note}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => {
+      state[id] = !state[id];
+      card.classList.toggle('done', state[id]);
+      updateProgress();
+    });
+
+    allCards.push(card);
+    trackDiv.appendChild(card);
+  });
+
+  tracksEl.appendChild(trackDiv);
+});
+
+function updateProgress() {
+  const done = Object.values(state).filter(Boolean).length;
+  document.getElementById('progressText').textContent = `${done} / ${totalItems} read`;
+  document.getElementById('progressFill').style.width = `${(done / totalItems) * 100}%`;
+}
+
+document.getElementById('filterbar').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('filter-btn')) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const filter = e.target.dataset.filter;
+  allCards.forEach(card => {
+    const types = card.dataset.types.split(',');
+    const show = filter === 'all' || types.includes(filter);
+    card.classList.toggle('hidden', !show);
+  });
+});
+</script>
+</body>
+</html>

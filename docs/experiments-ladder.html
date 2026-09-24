@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Safety &amp; Interpretability — Experiments Ladder</title>
+<style>
+  :root {
+    --paper: #eee9dd;
+    --paper-dark: #e2dcc9;
+    --ink: #2b2620;
+    --ink-soft: #5c5548;
+    --rule: #c9c0a8;
+    --stamp: #8a4a2f;
+    --stamp-soft: #b3714f;
+    --accent: #3d5a4a;
+    --blog-accent: #3d5470;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    padding: 32px 18px 80px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  header { margin-bottom: 30px; border-bottom: 2px solid var(--ink); padding-bottom: 16px; }
+  .kicker {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-size: 29px;
+    margin: 0 0 8px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .progress {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 14px 0 0;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--rule);
+    margin-top: 6px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .filterbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  .filter-btn {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    padding: 5px 11px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .section {
+    margin-top: 42px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .section-num {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--stamp);
+    border: 1px solid var(--stamp-soft);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 19px; }
+  .section-desc {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 4px 0 16px 32px;
+    max-width: 580px;
+  }
+
+  .card {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    margin-left: 32px;
+    margin-bottom: 8px;
+    background: var(--paper-dark);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule);
+    cursor: pointer;
+    transition: border-left-color 0.2s ease, opacity 0.2s ease;
+  }
+  .card:hover { border-left-color: var(--stamp-soft); }
+  .card.done { border-left-color: var(--accent); opacity: 0.55; }
+  .card.done .card-title { text-decoration: line-through; text-decoration-color: var(--ink-soft); }
+  .card.hidden { display: none; }
+
+  .box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--ink);
+    flex-shrink: 0;
+    margin-top: 3px;
+    position: relative;
+  }
+  .card.done .box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--accent);
+    font-family: Georgia, serif;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-title { font-size: 15px; line-height: 1.35; }
+  .card-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .tag {
+    border: 1px solid var(--stamp-soft);
+    color: var(--stamp);
+    padding: 1px 6px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .tag.setup { border-color: var(--blog-accent); color: var(--blog-accent); }
+  .tag.original { border-color: var(--accent); color: var(--accent); }
+  .card-note {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+  a.link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+  }
+  a.link:hover { border-bottom-style: solid; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Experiments Ladder · Companion to the Reading Path</div>
+    <h1>AI Safety &amp; Interpretability</h1>
+    <div class="subhead">Setup for tooling, reproductions for the load-bearing results, original for the ones nobody's handed you the answer to. Tap a card to mark it done; filter by type below.</div>
+    <div class="progress" id="progressText">0 / 0 done</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="filterbar" id="filterbar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="setup">Setup</button>
+      <button class="filter-btn" data-filter="reproduction">Reproduction</button>
+      <button class="filter-btn" data-filter="original">Original</button>
+    </div>
+  </header>
+
+  <div id="sections"></div>
+
+  <footer>
+    Reproductions are where the field's load-bearing claims stop being things you read and start being things you've watched happen. Original items don't have a known-correct answer — treat a null result as data, not failure.
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {
+    title: "Setup & Tooling",
+    desc: "The instruments the rest of this ladder assumes you already have running.",
+    items: [
+      {
+        t: "Install TransformerLens + CircuitsVis; run a first forward pass with activation caching",
+        meta: "GPT-2 small or Pythia-70m",
+        tags: ["setup"],
+        note: "Get comfortable with hooking into every layer's activations before trying to interpret any of them.",
+        url: "https://github.com/TransformerLensOrg/TransformerLens"
+      },
+      {
+        t: "Set up nnsight for remote activation access on a larger hosted model",
+        meta: "nnsight",
+        tags: ["setup"],
+        note: "TransformerLens assumes local weights; nnsight is the toolkit for when the model you care about doesn't fit on your box.",
+        url: "https://nnsight.net/"
+      },
+      {
+        t: "Get SAELens running; load a pretrained SAE on GPT-2 small via Neuronpedia and inspect 5 features by hand",
+        meta: "SAELens + Neuronpedia",
+        tags: ["setup"],
+        note: "Before training your own SAE in the next section, look at what a good one already found — it calibrates what 'interpretable feature' should feel like.",
+        url: "https://github.com/jbloomAus/SAELens"
+      },
+      {
+        t: "Work through YSDA's interpretability week: probing classifiers, then a mechanistic-interpretability lab",
+        meta: "nlp_course week11_interpretability",
+        tags: ["setup"],
+        note: "A structured, graded on-ramp that pairs well with the reproductions below — probing is the simpler technique and a good warm-up before activation patching.",
+        url: "https://github.com/yandexdataschool/nlp_course/tree/2025/week11_interpretability"
+      }
+    ]
+  },
+  {
+    title: "Mechanistic Interpretability — Reproductions",
+    desc: "Rebuild the field's core results yourself, in miniature, in that order.",
+    items: [
+      {
+        t: "Find an induction head in GPT-2 small via attention patterns + activation patching",
+        meta: "reproduces Olsson et al., 2022",
+        tags: ["reproduction"],
+        note: "The cleanest fully-reverse-engineered circuit in the literature — a good first target because you can verify you found the right thing.",
+        url: "https://github.com/TransformerLensOrg/TransformerLens"
+      },
+      {
+        t: "Train the original toy ReLU network on synthetic sparse features; reproduce the superposition phase-change plot",
+        meta: "reproduces Elhage et al., 2022",
+        tags: ["reproduction"],
+        note: "Small enough to run on a laptop in minutes — the phase change from monosemantic to superposed features as sparsity increases is the whole ballgame.",
+        url: "https://transformer-circuits.pub/2022/toy_model/index.html"
+      },
+      {
+        t: "Train your own sparse autoencoder on one layer of GPT-2 small; interpret 5 features by hand",
+        meta: "reproduces Bricken/Templeton et al.",
+        tags: ["reproduction"],
+        note: "Compare your untrained-from-scratch features against the pretrained ones you looked at in Setup — where do they agree or diverge?",
+        url: "https://github.com/jbloomAus/SAELens"
+      },
+      {
+        t: "Pick one single-token completion behavior; hand-trace the circuit with activation/path patching until you can state the mechanism",
+        meta: "your own circuit, your own model",
+        tags: ["original"],
+        note: "No paper to check against by design — this is the exercise that tells you whether you actually internalized the patching methodology or just watched it work on someone else's example.",
+        url: "https://github.com/callummcdougall/ARENA_3.0"
+      }
+    ]
+  },
+  {
+    title: "Math for AI Safety — Worked Problems",
+    desc: "The mathforaisafety.org research directions, turned into things you compute rather than read.",
+    items: [
+      {
+        t: "Train a tiny model on modular addition; recover the circular (Fourier) embedding structure",
+        meta: "the canonical grokking / modular-arithmetic circuit",
+        tags: ["reproduction"],
+        note: "The clearest hands-on example of the 'feature manifold' framing from the reading list's Interpretability & Feature Manifolds direction — closest to your own algebraic-topology background.",
+        url: "https://github.com/callummcdougall/ARENA_3.0"
+      },
+      {
+        t: "Implement FairBot, CUPOD, and DUPOC playing each other in a source-code-visible Prisoner's Dilemma via toy Löb's-theorem proof search",
+        meta: "Open-Source Game Theory research direction",
+        tags: ["original"],
+        note: "Check your small-k outcomes against the known results first, then see if your setup gives any signal toward the stated-open DUPOC(k) vs CUPOD(k) question for larger k.",
+        url: "https://mathforaisafety.org/research/open-source-game-theory"
+      },
+      {
+        t: "Find a small network where an 'unlikely coincidence' in its behavior has a genuine structural explanation; write it up as a mini heuristic-estimator argument",
+        meta: "No-Coincidence Conjecture, in miniature",
+        tags: ["original"],
+        note: "You're not proving the conjecture — you're building the kind of concrete example the heuristic-estimator framing is trying to formalize.",
+        url: "https://mathforaisafety.org/research/heuristic-estimators"
+      }
+    ]
+  },
+  {
+    title: "Scalable Oversight & Behavioral Alignment",
+    desc: "Getting honest, safe behavior out of models you can't fully inspect — hands-on.",
+    items: [
+      {
+        t: "Use one model to write behavioral evals (e.g. sycophancy probes) for another; measure how much stated values shift under mild social pressure",
+        meta: "reproduces Perez et al.'s model-written-evals method",
+        tags: ["reproduction"],
+        note: "Cheap to run and the sycophancy effect size is usually large enough to see clearly even at small model scale.",
+        url: "https://arxiv.org/abs/2212.09251"
+      },
+      {
+        t: "Fine-tune a small open model with a simple backdoor (e.g. year-conditioned code vulnerability); run standard safety fine-tuning on top and check if it survives",
+        meta: "sleeper-agent-lite, reproduces Hubinger et al.",
+        tags: ["reproduction"],
+        note: "The scaled-down version of the paper's central, uncomfortable finding: standard RLHF-style fine-tuning doesn't reliably remove a deliberately trained backdoor.",
+        url: "https://arxiv.org/abs/2401.05566"
+      },
+      {
+        t: "Train a linear probe on the backdoored model's activations to detect the deceptive behavior before it fires",
+        meta: "reproduces Simple Probes Can Catch Sleeper Agents",
+        tags: ["reproduction"],
+        note: "Direct follow-up to the previous card — pairs an interpretability tool with the behavioral failure it's meant to catch.",
+        url: "https://www.anthropic.com/research/probes-catch-sleeper-agents"
+      }
+    ]
+  },
+  {
+    title: "Reward Hacking & Specification Gaming",
+    desc: "Watch a reward signal get exploited, on purpose, at small scale.",
+    items: [
+      {
+        t: "Build an RL environment with a deliberately gameable reward (classic specification-gaming setup); let an agent find the exploit",
+        meta: "e.g. a racing-game points reward instead of a finish-line reward",
+        tags: ["reproduction"],
+        note: "Pairs directly with your RL experiments ladder's B4 phase (Reward Hacking & Overoptimization) — same phenomenon, different environment.",
+        url: "https://arxiv.org/abs/1606.06565"
+      },
+      {
+        t: "Give a small model a stated training objective plus a monitored-vs-unmonitored framing; measure the compliance gap between conditions",
+        meta: "alignment-faking-lite, in the spirit of Greenblatt et al.",
+        tags: ["original"],
+        note: "No guarantee you'll see the effect at small scale — a null result here is itself informative about how much of the phenomenon depends on model capability.",
+        url: "https://arxiv.org/abs/2412.14093"
+      }
+    ]
+  },
+  {
+    title: "Governance & Synthesis",
+    desc: "Zoom back out — turn the reading list itself into an analysis exercise.",
+    items: [
+      {
+        t: "Pick 3 papers from the Mechanistic Interpretability core line; map each onto Sharkey et al.'s 'Open Problems' taxonomy",
+        meta: "synthesis exercise",
+        tags: ["original"],
+        note: "Forces you to state, in your own words, which open problem each result actually moves the needle on.",
+        url: "https://arxiv.org/abs/2501.16496"
+      },
+      {
+        t: "Run a mini version of the safety-vs-capabilities publication tally from 'Mapping Technical Safety Research at AI Companies' on one lab's recent output",
+        meta: "replication of the paper's methodology, not its numbers",
+        tags: ["original"],
+        note: "Compare your tally to the paper's — disagreement is a useful check on how sensitive the method is to classification judgment calls.",
+        url: "https://arxiv.org/abs/2409.07878"
+      }
+    ]
+  }
+];
+
+const tracksEl = document.getElementById('sections');
+let totalItems = 0;
+const state = {};
+const allCards = [];
+
+DATA.forEach((track, ti) => {
+  const trackDiv = document.createElement('div');
+  trackDiv.className = 'section';
+
+  const head = document.createElement('div');
+  head.className = 'section-head';
+  head.innerHTML = `<div class="section-num">${ti + 1}</div><div class="section-title">${track.title}</div>`;
+  trackDiv.appendChild(head);
+
+  const desc = document.createElement('div');
+  desc.className = 'section-desc';
+  desc.textContent = track.desc;
+  trackDiv.appendChild(desc);
+
+  track.items.forEach((item, ii) => {
+    totalItems++;
+    const id = `${ti}-${ii}`;
+    state[id] = false;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = id;
+    card.dataset.types = item.tags.join(',');
+
+    const tagsHtml = item.tags.map(t => `<span class="tag ${t === 'setup' ? 'setup' : t === 'original' ? 'original' : ''}">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="box"></div>
+      <div class="card-body">
+        <div class="card-title">${item.t}</div>
+        <div class="card-meta">
+          <span>${item.meta}</span>
+          ${tagsHtml}
+          <a class="link" href="${item.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ open</a>
+        </div>
+        <div class="card-note">${item.note}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => {
+      state[id] = !state[id];
+      card.classList.toggle('done', state[id]);
+      updateProgress();
+    });
+
+    allCards.push(card);
+    trackDiv.appendChild(card);
+  });
+
+  tracksEl.appendChild(trackDiv);
+});
+
+function updateProgress() {
+  const done = Object.values(state).filter(Boolean).length;
+  document.getElementById('progressText').textContent = `${done} / ${totalItems} done`;
+  document.getElementById('progressFill').style.width = `${(done / totalItems) * 100}%`;
+}
+
+document.getElementById('filterbar').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('filter-btn')) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const filter = e.target.dataset.filter;
+  allCards.forEach(card => {
+    const types = card.dataset.types.split(',');
+    const show = filter === 'all' || types.includes(filter);
+    card.classList.toggle('hidden', !show);
+  });
+});
+</script>
+</body>
+</html>
