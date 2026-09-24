@@ -9,7 +9,7 @@ here fixes that without patching ds-agent.
 
 import os
 
-import mcp.client.stdio as stdio
+from mcp.client import stdio
 
 PASSTHROUGH = (
     "HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy",
@@ -26,7 +26,7 @@ def _env_with_proxy() -> dict[str, str]:
 
 stdio.get_default_environment = _env_with_proxy
 
-from ds_agent.kaggle_mcp import main  # noqa: E402
+from ds_agent.kaggle_mcp import main
 
 if __name__ == "__main__":
     main()
