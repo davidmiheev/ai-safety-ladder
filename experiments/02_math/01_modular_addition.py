@@ -80,6 +80,25 @@ def restricted_loss(model, tokens, labels, B, key_freqs, p) -> float:
     return torch.nn.functional.cross_entropy(kept, labels).item()
 
 
+def logit_spectrum(logits: torch.Tensor, p: int) -> torch.Tensor:
+    """Mean power of the logit vector over answers c at each frequency k = 1..(p-1)/2.
+
+    logits: [n, p]. Power at k combines the cos and sin components (rfft bin k)."""
+    spec = torch.fft.rfft(logits.double() - logits.double().mean(-1, keepdim=True), dim=-1).abs().pow(2)
+    return spec[:, 1:p // 2 + 1].mean(0)
+
+
+def keep_freqs_loss(logits: torch.Tensor, labels: torch.Tensor, freqs: list[int], p: int, keep: bool) -> float:
+    """Loss after keeping (keep=True) or removing (keep=False) the given frequencies of each
+    example's logit vector over c (plus the mean)."""
+    F = torch.fft.rfft(logits.double(), dim=-1)
+    mask = torch.zeros(F.shape[-1], dtype=torch.bool, device=F.device)
+    mask[freqs] = True
+    mask[0] = True  # the mean never matters for the softmax
+    F = F * (mask if keep else ~mask | (torch.arange(F.shape[-1], device=F.device) == 0))
+    return torch.nn.functional.cross_entropy(torch.fft.irfft(F, n=p, dim=-1), labels).item()
+
+
 def train(args) -> dict:
     torch.manual_seed(args.seed)
     p, device = args.p, args.device
@@ -131,13 +150,29 @@ def train(args) -> dict:
         basis, _ = torch.linalg.qr(circle.T)  # [d, 2]
         xy = (W_E @ basis).cpu()
         # Neurons: fraction of each MLP neuron's activation variance explained by its best key frequency pair.
-        _, cache = model.run_with_cache(tokens)
+        all_logits, cache = model.run_with_cache(tokens)
         acts = cache["blocks.0.mlp.hook_post"][:, -1].reshape(p, p, -1)  # [a, b, neuron]
+        # Output side: which frequencies do the logits (over answers c) actually use?
+        test_logits = all_logits[te, -1]
+        lspec = logit_spectrum(test_logits, p)
+        logit_key = (lspec.topk(args.n_key).indices + 1).tolist()
+        output_side = {
+            "logit_spectrum": (lspec / lspec.sum()).cpu().tolist(),
+            "logit_top_freqs": logit_key,
+            "logit_share_in_embedding_keys": (lspec[[k - 1 for k in key]].sum() / lspec.sum()).item(),
+            "logit_share_in_logit_top": (lspec.topk(args.n_key).values.sum() / lspec.sum()).item(),
+            "restricted_loss_embedding_keys": keep_freqs_loss(test_logits, labels[te], key, p, keep=True),
+            "restricted_loss_logit_keys": keep_freqs_loss(test_logits, labels[te], logit_key, p, keep=True),
+            "excluded_loss_logit_keys": keep_freqs_loss(test_logits, labels[te], logit_key, p, keep=False),
+            "test_loss": torch.nn.functional.cross_entropy(test_logits, labels[te]).item(),
+        }
+        torch.save(model.state_dict(), output_dir("02_math") / "modular_addition_model.pt")
     return {
         "p": p, "frac": args.frac, "steps": args.steps, "seed": args.seed, "history": hist,
         "final_test_accuracy": acc, "spectrum": spec.cpu().tolist(), "key_freqs": key,
         "circle_freq": k0, "circle_xy": xy.tolist(),
         "neuron_freq_r2": neuron_frequency_r2(acts.cpu(), p, key),
+        "output_side": output_side,
     }
 
 
@@ -222,6 +257,7 @@ def main() -> None:
         grok = next((s for s, t in zip(h["step"], h["test_loss"]) if t < 0.1), None)
         print(f"test accuracy {res['final_test_accuracy']:.4f}; key frequencies {res['key_freqs']}; "
               f"test loss < 0.1 from step {grok}; neurons: {res['neuron_freq_r2']}")
+        print("output side:", {k: v for k, v in res["output_side"].items() if k != "logit_spectrum"})
     plot(res, out)
     print(f"-> {out / 'modular_addition.png'}, {path}")
 
