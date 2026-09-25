@@ -38,6 +38,9 @@ ARTIFACTS = [
     "01_mech_interp/toy_superposition_a.json",
     "01_mech_interp/toy_superposition_b.json",
     "01_mech_interp/toy_superposition_c.json",
+    "02_math/modular_addition.png",
+    "02_math/modular_addition.json",
+    "02_math/modal_agents.json",
 ]
 
 
