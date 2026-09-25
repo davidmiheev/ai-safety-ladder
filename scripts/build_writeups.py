@@ -32,6 +32,12 @@ ARTIFACTS = [
     "01_mech_interp/induction_heads.png",
     "01_mech_interp/induction_where_vs_what.png",
     "01_mech_interp/induction_heads.json",
+    "01_mech_interp/superposition_geometry.png",
+    "01_mech_interp/superposition_phase.png",
+    "01_mech_interp/superposition_dimensionality.png",
+    "01_mech_interp/toy_superposition_a.json",
+    "01_mech_interp/toy_superposition_b.json",
+    "01_mech_interp/toy_superposition_c.json",
 ]
 
 

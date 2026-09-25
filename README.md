@@ -5,6 +5,7 @@ load-bearing results, original work for the questions nobody has answered yet.
 
 - Ladder (interactive checklist): [`docs/experiments-ladder.html`](docs/experiments-ladder.html)
 - Reading path: [`docs/reading-list.html`](docs/reading-list.html)
+- Write-ups (PDF, one per section, with the math, figures and findings): [`writeups/pdf/`](writeups/pdf/)
 
 ## Quickstart
 
@@ -28,7 +29,17 @@ uv run python experiments/00_setup/02_nnsight_activations.py --remote   # NDIF, 
 uv run python experiments/00_setup/03_saelens_pretrained_sae.py
 ```
 
-Generated plots/HTML land in `outputs/<experiment>/` (git-ignored).
+Generated plots/HTML/JSON land in `outputs/<experiment>/` (git-ignored).
+
+### Write-ups
+
+Each section has a Typst source in `writeups/` that pulls its numbers straight from the
+experiments' JSON output, so text and results can't drift apart. After re-running experiments:
+
+```bash
+uv run python scripts/build_writeups.py        # copies figures/JSON into writeups/, renders writeups/pdf/*.pdf
+uv run python scripts/build_writeups.py 02     # one section
+```
 
 ## Remote GPUs (Colab / Kaggle via MCP)
 
@@ -76,7 +87,8 @@ experiments/
   03_oversight/        §4 Scalable Oversight & Behavioral Alignment
   04_reward_hacking/   §5 Reward Hacking & Specification Gaming
   05_synthesis/        §6 Governance & Synthesis
-notes/                 write-ups, feature notes, null results
+notes/                 your notes: feature annotations, null results
+writeups/              section write-ups (Typst sources, figures, data, rendered pdf/)
 scripts/               GPU MCP setup (Colab / Kaggle via ds-agent)
 tests/                 smoke tests for the toolchain
 ```
@@ -84,15 +96,15 @@ tests/                 smoke tests for the toolchain
 ## Progress
 
 ### 1 · Setup & Tooling
-- [ ] TransformerLens + CircuitsVis: first forward pass with activation caching — `00_setup/01_transformerlens_first_pass.py`
+- [x] TransformerLens + CircuitsVis: first forward pass with activation caching — `00_setup/01_transformerlens_first_pass.py`
 - [ ] nnsight: remote activation access on a larger hosted model — `00_setup/02_nnsight_activations.py`
 - [ ] SAELens + Neuronpedia: load a pretrained GPT-2 small SAE, inspect 5 features by hand — `00_setup/03_saelens_pretrained_sae.py`, `notes/sae_features_pretrained.md`
 - [ ] YSDA NLP course week 11: probing, then mech-interp lab — `00_setup/04_ysda_interpretability.md`
 
 ### 2 · Mechanistic Interpretability — Reproductions
-- [ ] Induction head in GPT-2 small via attention patterns + activation patching (Olsson et al., 2022)
-- [ ] Toy ReLU model: superposition phase-change plot (Elhage et al., 2022)
-- [ ] Train your own SAE on one GPT-2 small layer; interpret 5 features
+- [x] Induction head in GPT-2 small via attention patterns + activation patching (Olsson et al., 2022) — `01_mech_interp/01_induction_heads.py`
+- [x] Toy ReLU model: superposition phase-change plot (Elhage et al., 2022) — `01_mech_interp/02_toy_superposition.py`
+- [ ] Train your own SAE on one GPT-2 small layer; interpret 5 features — `01_mech_interp/03_train_sae.py` (GPU), `notes/sae_features_trained.md`
 - [ ] *Original:* hand-trace a single-token completion circuit with activation/path patching
 
 ### 3 · Math for AI Safety — Worked Problems

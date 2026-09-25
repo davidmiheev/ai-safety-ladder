@@ -7,32 +7,32 @@
   "top_induction": [
     {
       "head": "5.5",
-      "score": 0.9212812781333923,
+      "score": 0.9396195411682129,
       "known": true
     },
     {
       "head": "6.9",
-      "score": 0.8982732892036438,
+      "score": 0.9161283373832703,
       "known": true
     },
     {
       "head": "7.10",
-      "score": 0.897687554359436,
+      "score": 0.91547030210495,
       "known": true
     },
     {
       "head": "5.1",
-      "score": 0.892992377281189,
+      "score": 0.9108485579490662,
       "known": true
     },
     {
       "head": "7.2",
-      "score": 0.8210049867630005,
+      "score": 0.8373467922210693,
       "known": true
     },
     {
       "head": "10.1",
-      "score": 0.5286839604377747,
+      "score": 0.5390884280204773,
       "known": false
     }
   ],
@@ -113,63 +113,63 @@
       "recovered": 0.8158633698763217
     }
   ],
-  "corrupted_induction_attention": 0.0017237290798220784,
+  "corrupted_induction_attention": 0.001656620530411601,
   "prev_token_sweep": [
     {
       "k": 1,
-      "induction_attention": 0.05707383826375008,
+      "induction_attention": 0.05813251473009586,
       "recovered": 0.0036617934603233662
     },
     {
       "k": 3,
-      "induction_attention": 0.25971475541591643,
+      "induction_attention": 0.2648213028907776,
       "recovered": 0.0006278725236056201
     },
     {
       "k": 5,
-      "induction_attention": 0.3603861153125763,
+      "induction_attention": 0.3675055861473083,
       "recovered": -0.013589823436102582
     },
     {
       "k": 10,
-      "induction_attention": 0.52328080534935,
+      "induction_attention": 0.533652150630951,
       "recovered": -0.08141723845344964
     },
     {
       "k": 20,
-      "induction_attention": 0.6093197345733643,
+      "induction_attention": 0.621396791934967,
       "recovered": -0.16688166055058118
     },
     {
       "k": 60,
-      "induction_attention": 0.8147720217704773,
+      "induction_attention": 0.8309286713600159,
       "recovered": -0.39734180515613593
     }
   ],
   "component_decomposition": [
     {
       "component": "attention outputs (all heads)",
-      "induction_attention": 0.635044378042221,
+      "induction_attention": 0.6476064503192902,
       "recovered": -0.023435293748852625
     },
     {
       "component": "MLP 0 output",
-      "induction_attention": 0.6791412711143494,
+      "induction_attention": 0.6926529288291932,
       "recovered": 0.9108906002114743
     },
     {
       "component": "MLP outputs",
-      "induction_attention": 0.4504099369049072,
+      "induction_attention": 0.4593634128570557,
       "recovered": 0.6133783994543687
     },
     {
       "component": "attention + MLP 0",
-      "induction_attention": 0.8145814299583435,
+      "induction_attention": 0.8307762145996094,
       "recovered": 0.9906125681832283
     },
     {
       "component": "attention + MLP outputs",
-      "induction_attention": 0.8146552562713623,
+      "induction_attention": 0.8308503746986389,
       "recovered": 0.9886048046622657
     }
   ]

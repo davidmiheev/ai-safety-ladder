@@ -55,11 +55,15 @@ def second_half_logprob(logits: torch.Tensor, tokens: torch.Tensor, seq_len: int
 
 
 def attention_scores(cache, n_layers: int, seq_len: int):
-    """Per-head average attention to (i - L + 1) [induction] and (i - 1) [previous token]."""
+    """Per-head average attention to (i - L + 1) [induction] and (i - 1) [previous token].
+
+    The offset -(L-1) diagonal pairs query q with key q-L+1 for q = L-1 .. 2L; dropping the
+    first two entries keeps exactly the second-copy queries q = L+1 .. 2L.
+    """
     induction, prev = [], []
     for layer in range(n_layers):
         pattern = cache["pattern", layer]  # [batch, head, q, k]
-        induction.append(pattern.diagonal(offset=-(seq_len - 1), dim1=-2, dim2=-1)[..., 1:].mean((0, -1)))
+        induction.append(pattern.diagonal(offset=-(seq_len - 1), dim1=-2, dim2=-1)[..., 2:].mean((0, -1)))
         prev.append(pattern.diagonal(offset=-1, dim1=-2, dim2=-1).mean((0, -1)))
     return torch.stack(induction), torch.stack(prev)  # [layer, head]
 
@@ -84,7 +88,7 @@ def patch_heads(model, clean_cache, corrupt_tokens, seq_len: int) -> torch.Tenso
 def induction_attention(cache, heads, seq_len: int) -> float:
     """Mean attention of `heads` to the induction target (i - L + 1) on the second copy."""
     return sum(
-        cache["pattern", layer][:, head].diagonal(offset=-(seq_len - 1), dim1=-2, dim2=-1)[..., 1:].mean().item()
+        cache["pattern", layer][:, head].diagonal(offset=-(seq_len - 1), dim1=-2, dim2=-1)[..., 2:].mean().item()
         for layer, head in heads
     ) / len(heads)
 
@@ -232,7 +236,8 @@ def main() -> None:
 
     # --- Figures ------------------------------------------------------------------------
     out = output_dir("01_mech_interp")
-    fig, axes = plt.subplots(1, 4, figsize=(22, 4.5))
+    fig, axes = plt.subplots(2, 2, figsize=(12, 9))
+    axes = axes.flatten()
     axes[0].plot(loss.numpy())
     axes[0].axvline(L, color="grey", ls="--")
     axes[0].set(title="per-token loss on [BOS, A, A]", xlabel="position", ylabel="loss (nats)")
