@@ -21,6 +21,7 @@ notebooks = ["jupyterlab", "ipykernel", "ipywidgets"]
 
 [dependency-groups]
 dev = ["pytest", "ruff"]
+docs = ["typst>=0.13"]  # renders writeups/*.typ -> PDF (scripts/build_writeups.py)
 
 [build-system]
 requires = ["hatchling"]
@@ -35,3 +36,6 @@ markers = ["slow: downloads model weights (deselect with -m 'not slow')"]
 
 [tool.ruff]
 line-length = 100
+
+[tool.uv]
+default-groups = ["dev", "docs"]

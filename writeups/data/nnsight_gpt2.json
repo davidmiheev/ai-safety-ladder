@@ -1,0 +1,37 @@
+{
+  "model": "openai-community/gpt2",
+  "remote": false,
+  "prompt": "The Eiffel Tower is located in the city of",
+  "n_layers": 12,
+  "hidden_shape": [
+    1,
+    11,
+    768
+  ],
+  "top_predictions": [
+    {
+      "token": " Paris",
+      "prob": 0.06377790868282318
+    },
+    {
+      "token": " London",
+      "prob": 0.0461106151342392
+    },
+    {
+      "token": " Amsterdam",
+      "prob": 0.034127697348594666
+    },
+    {
+      "token": " New",
+      "prob": 0.031705599278211594
+    },
+    {
+      "token": " Berlin",
+      "prob": 0.02618958242237568
+    }
+  ],
+  "ablated_layer": 6,
+  "answer": " Paris",
+  "p_answer_clean": 0.06377790868282318,
+  "p_answer_mlp_zeroed": 0.08531760424375534
+}

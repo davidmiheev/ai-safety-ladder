@@ -1,0 +1,176 @@
+{
+  "seq_len": 50,
+  "batch": 8,
+  "seed": 0,
+  "loss_first_copy": 12.364707946777344,
+  "loss_second_copy": 0.1831628978252411,
+  "top_induction": [
+    {
+      "head": "5.5",
+      "score": 0.9212812781333923,
+      "known": true
+    },
+    {
+      "head": "6.9",
+      "score": 0.8982732892036438,
+      "known": true
+    },
+    {
+      "head": "7.10",
+      "score": 0.897687554359436,
+      "known": true
+    },
+    {
+      "head": "5.1",
+      "score": 0.892992377281189,
+      "known": true
+    },
+    {
+      "head": "7.2",
+      "score": 0.8210049867630005,
+      "known": true
+    },
+    {
+      "head": "10.1",
+      "score": 0.5286839604377747,
+      "known": false
+    }
+  ],
+  "top_prev_token": [
+    {
+      "head": "4.11",
+      "score": 0.9909916520118713
+    },
+    {
+      "head": "3.7",
+      "score": 0.5480071306228638
+    },
+    {
+      "head": "6.8",
+      "score": 0.5065013766288757
+    },
+    {
+      "head": "2.2",
+      "score": 0.4889719486236572
+    }
+  ],
+  "clean_logprob": -0.18316292762756348,
+  "corrupt_logprob": -11.561227798461914,
+  "top_patching": [
+    {
+      "head": "7.2",
+      "recovered": 0.13979220390319824
+    },
+    {
+      "head": "6.9",
+      "recovered": 0.13274109363555908
+    },
+    {
+      "head": "9.9",
+      "recovered": 0.10720627754926682
+    },
+    {
+      "head": "9.6",
+      "recovered": 0.1069001778960228
+    },
+    {
+      "head": "7.10",
+      "recovered": 0.10488471388816833
+    },
+    {
+      "head": "5.1",
+      "recovered": 0.09917669743299484
+    }
+  ],
+  "most_negative_patching": [
+    {
+      "head": "10.7",
+      "recovered": -0.10559682548046112
+    },
+    {
+      "head": "11.10",
+      "recovered": -0.07151997089385986
+    },
+    {
+      "head": "7.6",
+      "recovered": -0.02673298679292202
+    }
+  ],
+  "head_sets": [
+    {
+      "set": "previous-token head",
+      "heads": "4.11",
+      "recovered": 0.0036617934603233662
+    },
+    {
+      "set": "top-5 induction heads",
+      "heads": "5.5 6.9 7.10 5.1 7.2",
+      "recovered": 0.8098758455633914
+    },
+    {
+      "set": "prev-token + top-5 induction",
+      "heads": "4.11 5.5 6.9 7.10 5.1 7.2",
+      "recovered": 0.8158633698763217
+    }
+  ],
+  "corrupted_induction_attention": 0.0017237290798220784,
+  "prev_token_sweep": [
+    {
+      "k": 1,
+      "induction_attention": 0.05707383826375008,
+      "recovered": 0.0036617934603233662
+    },
+    {
+      "k": 3,
+      "induction_attention": 0.25971475541591643,
+      "recovered": 0.0006278725236056201
+    },
+    {
+      "k": 5,
+      "induction_attention": 0.3603861153125763,
+      "recovered": -0.013589823436102582
+    },
+    {
+      "k": 10,
+      "induction_attention": 0.52328080534935,
+      "recovered": -0.08141723845344964
+    },
+    {
+      "k": 20,
+      "induction_attention": 0.6093197345733643,
+      "recovered": -0.16688166055058118
+    },
+    {
+      "k": 60,
+      "induction_attention": 0.8147720217704773,
+      "recovered": -0.39734180515613593
+    }
+  ],
+  "component_decomposition": [
+    {
+      "component": "attention outputs (all heads)",
+      "induction_attention": 0.635044378042221,
+      "recovered": -0.023435293748852625
+    },
+    {
+      "component": "MLP 0 output",
+      "induction_attention": 0.6791412711143494,
+      "recovered": 0.9108906002114743
+    },
+    {
+      "component": "MLP outputs",
+      "induction_attention": 0.4504099369049072,
+      "recovered": 0.6133783994543687
+    },
+    {
+      "component": "attention + MLP 0",
+      "induction_attention": 0.8145814299583435,
+      "recovered": 0.9906125681832283
+    },
+    {
+      "component": "attention + MLP outputs",
+      "induction_attention": 0.8146552562713623,
+      "recovered": 0.9886048046622657
+    }
+  ]
+}

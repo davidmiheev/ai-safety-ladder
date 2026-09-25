@@ -16,11 +16,14 @@ Usage:
 """
 
 import argparse
+import json
 import os
 
 import torch
 from dotenv import load_dotenv
 from nnsight import CONFIG, LanguageModel
+
+from ladder import output_dir
 
 PROMPT = "The Eiffel Tower is located in the city of"
 
@@ -81,6 +84,18 @@ def main() -> None:
     ablated = value(ablated)
     print(f"\nzeroing layer-{mid} MLP: p({model.tokenizer.decode(answer)!r}) "
           f"{probs[answer].item():.3f} -> {float(ablated):.3f}")
+
+    results = {
+        "model": model_name, "remote": args.remote, "prompt": args.prompt, "n_layers": len(blocks),
+        "hidden_shape": list(hidden.shape),
+        "top_predictions": [{"token": model.tokenizer.decode(i), "prob": p.item()}
+                            for p, i in zip(top.values, top.indices)],
+        "ablated_layer": mid, "answer": model.tokenizer.decode(answer),
+        "p_answer_clean": probs[answer].item(), "p_answer_mlp_zeroed": float(ablated),
+    }
+    path = output_dir("00_setup") / f"nnsight_{model_name.split('/')[-1]}.json"
+    path.write_text(json.dumps(results, indent=2))
+    print(f"numbers -> {path}")
 
 
 if __name__ == "__main__":

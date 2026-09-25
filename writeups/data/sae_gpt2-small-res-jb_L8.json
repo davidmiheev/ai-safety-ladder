@@ -1,0 +1,125 @@
+{
+  "release": "gpt2-small-res-jb",
+  "hook": "blocks.8.hook_resid_pre",
+  "d_in": 768,
+  "d_sae": 24576,
+  "prompts": [
+    {
+      "prompt": "The Golden Gate Bridge is a suspension bridge in San Francisco.",
+      "l0": 51.75,
+      "explained_variance": 0.8650412261486053,
+      "ce_clean": 2.679872751235962,
+      "ce_spliced": 2.828451156616211,
+      "top_features": [
+        {
+          "feature": 10261,
+          "act": 73.70645904541016,
+          "peak_token": " Golden",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/10261"
+        },
+        {
+          "feature": 20677,
+          "act": 73.21379852294922,
+          "peak_token": " San",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/20677"
+        },
+        {
+          "feature": 9752,
+          "act": 51.27640151977539,
+          "peak_token": " Francisco",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/9752"
+        },
+        {
+          "feature": 17608,
+          "act": 39.77546691894531,
+          "peak_token": " Bridge",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/17608"
+        },
+        {
+          "feature": 6069,
+          "act": 38.27598571777344,
+          "peak_token": "The",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/6069"
+        }
+      ]
+    },
+    {
+      "prompt": "def fibonacci(n):\n    if n < 2:\n        return n",
+      "l0": 58.730770111083984,
+      "explained_variance": 0.6457384526729584,
+      "ce_clean": 3.418699026107788,
+      "ce_spliced": 4.195725440979004,
+      "top_features": [
+        {
+          "feature": 9303,
+          "act": 71.91702270507812,
+          "peak_token": " ",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/9303"
+        },
+        {
+          "feature": 14143,
+          "act": 44.67448043823242,
+          "peak_token": " return",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/14143"
+        },
+        {
+          "feature": 24459,
+          "act": 43.274169921875,
+          "peak_token": " if",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/24459"
+        },
+        {
+          "feature": 24198,
+          "act": 41.37706756591797,
+          "peak_token": ":",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/24198"
+        },
+        {
+          "feature": 1763,
+          "act": 39.52953338623047,
+          "peak_token": " n",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/1763"
+        }
+      ]
+    },
+    {
+      "prompt": "She was furious, slammed the door, and refused to speak to anyone.",
+      "l0": 59.33333206176758,
+      "explained_variance": 0.8275808990001678,
+      "ce_clean": 3.1785213947296143,
+      "ce_spliced": 3.3949427604675293,
+      "top_features": [
+        {
+          "feature": 17139,
+          "act": 54.219825744628906,
+          "peak_token": " door",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/17139"
+        },
+        {
+          "feature": 14352,
+          "act": 49.4218864440918,
+          "peak_token": " refused",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/14352"
+        },
+        {
+          "feature": 10484,
+          "act": 48.67490005493164,
+          "peak_token": " to",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/10484"
+        },
+        {
+          "feature": 23063,
+          "act": 39.61763381958008,
+          "peak_token": "She",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/23063"
+        },
+        {
+          "feature": 6860,
+          "act": 38.42719268798828,
+          "peak_token": " speak",
+          "url": "https://www.neuronpedia.org/gpt2-small/8-res-jb/6860"
+        }
+      ]
+    }
+  ]
+}

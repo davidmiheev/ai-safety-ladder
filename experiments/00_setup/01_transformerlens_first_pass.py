@@ -13,8 +13,10 @@ Usage:
 """
 
 import argparse
+import json
 
 import circuitsvis as cv
+import matplotlib.pyplot as plt
 import torch
 from transformer_lens import HookedTransformer
 
@@ -28,6 +30,8 @@ def main() -> None:
     parser.add_argument("--model", default="gpt2-small", help="e.g. gpt2-small, pythia-70m")
     parser.add_argument("--prompt", default=PROMPT)
     parser.add_argument("--layer", type=int, default=0, help="layer to visualise attention for")
+    parser.add_argument("--head", default="9.9", help="head L.H to plot statically (9.9: an IOI name mover)")
+    parser.add_argument("--also", default=" John", help="extra token to track in the logit-lens plot")
     args = parser.parse_args()
 
     torch.set_grad_enabled(False)
@@ -69,6 +73,11 @@ def main() -> None:
     ranks = (lens_logits > lens_logits[:, answer, None]).sum(-1)
     print(f"\nlogit lens — rank of {model.to_string(answer)!r} after each layer:")
     print("  " + "  ".join(f"{lbl}:{r.item()}" for lbl, r in zip(labels, ranks)))
+    lens_probs = lens_logits.softmax(-1)
+    rivals = top.indices[:2].tolist()  # ' Mary', ' them' on the default prompt
+    extra = model.to_single_token(args.also) if args.also else None
+    if extra is not None and extra not in rivals:
+        rivals.append(extra)  # the subject ' John' — the name the model must *not* predict
 
     # --- 5. CircuitsVis attention patterns -----------------------------------------
     pattern = cache["pattern", args.layer][0]  # [head, query, key]
@@ -76,6 +85,42 @@ def main() -> None:
     out = output_dir("00_setup") / f"attention_{args.model}_L{args.layer}.html"
     out.write_text(str(html))
     print(f"\nattention patterns for layer {args.layer} -> {out}")
+
+    # --- 6. Static figure + numbers for the write-up -------------------------------------
+    hl, hh = map(int, args.head.split("."))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.2), gridspec_kw={"width_ratios": [1.2, 1]})
+    for idx in rivals:
+        ax1.plot(lens_probs[:, idx].cpu().numpy(), "o-", label=repr(model.to_string(idx)))
+    ax1.set(xticks=range(len(labels)), xlabel="residual stream after", ylabel="probability",
+            title="logit lens at the final position")
+    ax1.set_xticklabels(labels, rotation=60, fontsize=8)
+    ax1.legend()
+    head_pattern = cache["pattern", hl][0, hh].cpu()
+    ax2.imshow(head_pattern.numpy(), cmap="Blues")
+    ax2.set(xticks=range(len(str_tokens)), yticks=range(len(str_tokens)), title=f"attention of head {hl}.{hh}")
+    ax2.set_xticklabels(str_tokens, rotation=90, fontsize=7)
+    ax2.set_yticklabels(str_tokens, fontsize=7)
+    ax2.set(xlabel="key", ylabel="query")
+    fig.tight_layout()
+    fig_path = output_dir("00_setup") / f"logit_lens_{args.model}.png"
+    fig.savefig(fig_path, dpi=150)
+
+    results = {
+        "model": args.model, "prompt": args.prompt,
+        "n_layers": cfg.n_layers, "n_heads": cfg.n_heads, "d_model": cfg.d_model, "d_vocab": cfg.d_vocab,
+        "n_cached_activations": len(cache),
+        "top_predictions": [{"token": model.to_string(i), "prob": p.item()} for p, i in zip(top.values, top.indices)],
+        "resid_reconstruction_max_err": max_err,
+        "logit_lens_rank": {lbl: r.item() for lbl, r in zip(labels, ranks)},
+        "logit_lens_prob": {model.to_string(i): lens_probs[:, i].tolist() for i in rivals},
+        "logit_lens_labels": labels,
+        "static_head": args.head,
+        "static_head_final_query_top_key": str_tokens[head_pattern[-1].argmax().item()],
+        "static_head_final_query_top_weight": head_pattern[-1].max().item(),
+    }
+    json_path = output_dir("00_setup") / f"first_pass_{args.model}.json"
+    json_path.write_text(json.dumps(results, indent=2))
+    print(f"figure -> {fig_path}\nnumbers -> {json_path}")
 
 
 if __name__ == "__main__":
