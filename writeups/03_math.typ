@@ -23,8 +23,8 @@
     memorises first (train loss < 0.1 by step #memo-step) and generalises much later (test loss
     < 0.1 by step #grok-step, final test accuracy #pct(MA.final_test_accuracy, d: 1)). The learned
     embedding puts #pct(H.top_freq_share.at(-1)) of its norm on #MA.key_freqs.len() Fourier
-    frequencies and lays the residues out on circles. The Fourier structure is measurable long
-    before the test loss moves.
+    frequencies and lays the residues out on circles. The structure forms before the test loss
+    moves. Unlike in the paper, the *output* needs about 20 frequencies, not 5.
     *3.2 Open-source game theory.* An exact evaluator for provability-based agents (modal logic GL on
     Kripke chains) reproduces all #MG.known_checks.len() known outcomes, and gives
     DUPOC vs CUPOD = (#MG.dupoc_vs_cupod.outcome.at(0), #MG.dupoc_vs_cupod.outcome.at(1)) for
@@ -81,22 +81,77 @@ implement the algorithm.
     $#MA.circle_freq dot a mod p$.],
 ) <fig-modadd>
 
+#let OS = MA.output_side
+#let MO = json("data/modular_addition_output.json")
+#let sw(k) = MO.sweep.find(r => r.k == k)
 #finding[
-  - *Grokking.* Train loss falls below 0.1 by step #memo-step; test loss only by step #grok-step.
-  - *Sparse Fourier structure.* The final embedding puts #pct(H.top_freq_share.at(-1)) of its norm on
-    frequencies #MA.key_freqs.map(str).join(", "). A random embedding spreads its norm evenly,
-    about #pct(MA.key_freqs.len() / ((MA.p - 1) / 2)) on any #MA.key_freqs.len() frequencies.
-  - *Circles.* On the plane of frequency #MA.circle_freq, the #MA.p residues lie on a circle in
-    the order $#MA.circle_freq a mod p$, not in the order $a$. This is the "feature manifold"
-    of the reading list's Interpretability & Feature Manifolds direction.
-  - *Neurons compute functions of $a + b$.* For each MLP neuron at "$=$", we fit its activation
-    over all $p^2$ inputs with cos/sin of $omega_k a$, $omega_k b$ and $omega_k (a+b)$ at its best
-    key frequency. Median $R^2 = #fx(MA.neuron_freq_r2.median_r2)$, and
-    #pct(MA.neuron_freq_r2.at("frac_above_0.9")) of the #MA.neuron_freq_r2.n_neurons neurons
-    exceed 0.9.
-  - *Progress measure.* The restricted test loss falls below 0.1 at step
-    #if restricted-step == none [—] else [#restricted-step], and the Fourier share passes 0.9 at step
-    #if share-step == none [—] else [#share-step]. Test loss follows at step #grok-step.
+  - *Grokking.* Train loss falls below 0.1 by step #memo-step\; test loss only by step #grok-step.
+    Final test accuracy is #pct(MA.final_test_accuracy, d: 2).
+  - *A sparse Fourier embedding.* The embedding puts #pct(H.top_freq_share.at(-1)) of its norm on
+    frequencies #MA.key_freqs.map(str).join(", "). A random embedding would spread its norm
+    evenly, about #pct(MA.key_freqs.len() / ((MA.p - 1) / 2)) on any #MA.key_freqs.len() frequencies.
+  - *Circles.* On the plane of frequency #MA.circle_freq, the #MA.p residues lie on a circle
+    #if MA.circle_freq == 1 [in their natural order $a$ (for other key frequencies $k$ the order
+    is $k a mod p$)] else [in the order $#MA.circle_freq a mod p$, not in the order $a$]. This
+    is the "feature manifold" of the reading list's Interpretability & Feature Manifolds direction.
+  - *Neurons compute functions of $a + b$.* Median $R^2 = #fx(MA.neuron_freq_r2.median_r2)$, and
+    #pct(MA.neuron_freq_r2.at("frac_above_0.9")) of the #MA.neuron_freq_r2.n_neurons neurons exceed 0.9.
+  - *The structure appears before generalisation.* The embedding's Fourier share rises steadily
+    (@fig-modadd, top right) while test loss is still above 10 nats, and passes 0.9 at step
+    #if share-step == none [—] else [#share-step].
+]
+
+== The output is not five clean cosines
+
+Nanda et al.'s second progress measure, the *restricted loss*, keeps only the key frequencies of
+the logits. Here it does not behave as a progress measure: it dips at grokking and then rises to
+about 3 nats while the true test loss stays near $10^(-3)$ (@fig-modadd, dashed). I checked the
+implementation against an independent FFT version, and the two agree exactly, so this is a
+property of the model. Diagnostics on the final logits, taken as a function of the answer $c$
+(`experiments/02_math/01b_output_frequencies.py` for the sweep over $K$):
+
+#figure(
+  table(
+    columns: (1fr, auto),
+    align: (left, right),
+    table.header([logits over $c$, test set], [value]),
+    [full model: test loss], [#fx(OS.test_loss, d: 4)],
+    [top frequencies of the logits (by power)], [#OS.logit_top_freqs.map(str).join(", ")],
+    [power share of those 5], [#pct(OS.logit_share_in_logit_top)],
+    [power share of the embedding's 5 key frequencies], [#pct(OS.logit_share_in_embedding_keys)],
+    [loss keeping only the logits' top 5], [#fx(OS.restricted_loss_logit_keys, d: 2)],
+    [loss keeping only the embedding's 5 keys], [#fx(OS.restricted_loss_embedding_keys, d: 2)],
+    [loss *removing* the logits' top 5], [#fx(OS.excluded_loss_logit_keys, d: 1)],
+  ),
+  caption: [Where the logits' information lives. Uniform guessing is $ln #MA.p approx #fx(calc.ln(MA.p))$ nats.],
+) <tab-output>
+
+#finding[
+  - *Power sits in low frequencies, which barely discriminate.* Frequency 1 alone carries
+    #pct(sw(1).power_share) of the logit power, and $k = 1, 2, 3$ together carry
+    #pct(MO.low_freq_power_share). A cosine of frequency 1 changes by only
+    $1 - cos(2 pi \/ #MA.p) approx #fx(1 - calc.cos(2 * calc.pi / MA.p), d: 4)$ of its amplitude
+    between neighbouring answers.
+  - *About 20 frequencies are needed.* Keeping the top 5 by power (#pct(sw(5).power_share) of it)
+    leaves the model at chance: loss #fx(sw(5).loss, d: 1), argmax right #pct(sw(5).accuracy) of
+    the time. The top 10 give #pct(sw(10).accuracy) accuracy, and the top 20 give
+    #pct(sw(20).accuracy) (loss #fx(sw(20).loss)).
+  - *Weak evidence for combination frequencies.* #MO.hits.len() of the top 20 logit frequencies
+    are embedding keys or their pairwise sums and differences (#MO.hits.map(str).join(", ")),
+    against #fx(MO.null_mean_hits, d: 1) expected by chance ($p = #fx(MO.p_value, d: 3)$, 5,000
+    random draws). That is consistent with the MLP's ReLUs creating product terms that the
+    unembedding reads, on top of the clean $cos omega(a+b-c)$ terms, but it's one model and a
+    borderline test.
+]
+
+#caveat[
+  - Nanda et al. trained for 40k steps; this run stopped at #H.step.at(-1). Weight decay keeps
+    pruning after grokking, so the cleaner five-frequency output may simply need more training.
+    That's cheap to test with `--steps 50000`.
+  - Two runs with the same seed found different key frequencies (1, 49, 21, 7, 14 here; 49, 3, 1,
+    21, 42 in an earlier run). Multi-threaded CPU arithmetic isn't bit-reproducible, and grokking
+    amplifies tiny differences. Frequencies 1, 49 and 21 appeared in both runs. The circle,
+    grokking and neuron findings held in both.
 ]
 
 = Open-source game theory with provability (card 3.2)
@@ -180,7 +235,7 @@ about $p^(-p^2)$, and the Fourier circuit above is its structural explanation.
 = Status of §3
 
 #status-table(
-  (true, [3.1 Modular addition: grokking, Fourier spectrum, circles, progress measures.]),
+  (true, [3.1 Modular addition: grokking, Fourier embedding, circles, neurons, and an output-side analysis of the restricted-loss discrepancy.]),
   ("partial", [3.2 Modal agents: exact unbounded evaluator and known results done. Bounded proof search is yours.]),
   (false, [3.3 No-coincidence mini-argument: scaffold in `03_no_coincidence.md`.]),
 )

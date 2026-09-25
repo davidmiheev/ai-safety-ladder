@@ -43,6 +43,7 @@ ARTIFACTS = [
     "01_mech_interp/sae_train_info.json",
     "02_math/modular_addition.png",
     "02_math/modular_addition.json",
+    "02_math/modular_addition_output.json",
     "02_math/modal_agents.json",
 ]
 

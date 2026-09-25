@@ -108,7 +108,7 @@ tests/                 smoke tests for the toolchain
 - [ ] *Original:* hand-trace a single-token completion circuit with activation/path patching — scaffold + method: `01_mech_interp/04_trace_circuit.{py,md}`, toolkit `src/ladder/patching.py`
 
 ### 3 · Math for AI Safety — Worked Problems
-- [ ] Modular addition: recover the Fourier embedding structure — `02_math/01_modular_addition.py`
+- [x] Modular addition: recover the Fourier embedding structure — `02_math/01_modular_addition.py`, `01b_output_frequencies.py`
 - [ ] *Original:* FairBot / CUPOD / DUPOC via toy Löbian proof search — exact unbounded (GL) evaluator + known results: `02_math/02_modal_agents.py`; bounded search is yours
 - [ ] *Original:* no-coincidence mini heuristic-estimator argument — scaffold: `02_math/03_no_coincidence.md`
 
