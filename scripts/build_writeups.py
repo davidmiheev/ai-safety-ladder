@@ -55,7 +55,8 @@ def sync_artifacts() -> None:
         elif dst.exists():
             print(f"  warning: {rel} not in outputs/, keeping committed copy", file=sys.stderr)
         else:
-            raise SystemExit(f"missing {rel}: run the experiment that produces it first")
+            # Only the section that uses it will fail to compile; the others still build.
+            print(f"  warning: {rel} missing — run the experiment that produces it", file=sys.stderr)
 
 
 def main() -> None:
@@ -69,14 +70,22 @@ def main() -> None:
     if args.only:
         sources = [p for p in sources if any(p.name.startswith(o) for o in args.only)]
     (WRITEUPS / "pdf").mkdir(exist_ok=True)
+    failed = []
     for src in sources:
         pdf = WRITEUPS / "pdf" / f"{src.stem}.pdf"
-        typst.compile(str(src), output=str(pdf), root=str(WRITEUPS))
+        try:
+            typst.compile(str(src), output=str(pdf), root=str(WRITEUPS))
+        except typst.TypstError as e:
+            failed.append(src.name)
+            print(f"{src.relative_to(ROOT)}: FAILED\n{e}", file=sys.stderr)
+            continue
         print(f"{src.relative_to(ROOT)} -> {pdf.relative_to(ROOT)} ({pdf.stat().st_size // 1024} KB)")
         if args.preview:
             prev = OUTPUTS / "writeup_preview"
             prev.mkdir(parents=True, exist_ok=True)
             typst.compile(str(src), output=str(prev / f"{src.stem}-{{p}}.png"), root=str(WRITEUPS), ppi=80)
+    if failed:
+        raise SystemExit(f"failed: {', '.join(failed)}")
 
 
 if __name__ == "__main__":
