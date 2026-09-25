@@ -1,0 +1,127 @@
+{
+ "table": {
+  "CooperateBot|CooperateBot": "C",
+  "CooperateBot|DefectBot": "C",
+  "CooperateBot|FairBot": "C",
+  "CooperateBot|CUPOD": "C",
+  "CooperateBot|PrudentBot": "C",
+  "DefectBot|CooperateBot": "D",
+  "DefectBot|DefectBot": "D",
+  "DefectBot|FairBot": "D",
+  "DefectBot|CUPOD": "D",
+  "DefectBot|PrudentBot": "D",
+  "FairBot|CooperateBot": "C",
+  "FairBot|DefectBot": "D",
+  "FairBot|FairBot": "C",
+  "FairBot|CUPOD": "D",
+  "FairBot|PrudentBot": "C",
+  "CUPOD|CooperateBot": "C",
+  "CUPOD|DefectBot": "D",
+  "CUPOD|FairBot": "C",
+  "CUPOD|CUPOD": "D",
+  "CUPOD|PrudentBot": "C",
+  "PrudentBot|CooperateBot": "D",
+  "PrudentBot|DefectBot": "D",
+  "PrudentBot|FairBot": "C",
+  "PrudentBot|CUPOD": "D",
+  "PrudentBot|PrudentBot": "C"
+ },
+ "stable_from_world": {
+  "CooperateBot|CooperateBot": 0,
+  "CooperateBot|DefectBot": 0,
+  "CooperateBot|FairBot": 0,
+  "CooperateBot|CUPOD": 1,
+  "CooperateBot|PrudentBot": 2,
+  "DefectBot|CooperateBot": 0,
+  "DefectBot|DefectBot": 0,
+  "DefectBot|FairBot": 1,
+  "DefectBot|CUPOD": 0,
+  "DefectBot|PrudentBot": 1,
+  "FairBot|CooperateBot": 0,
+  "FairBot|DefectBot": 1,
+  "FairBot|FairBot": 0,
+  "FairBot|CUPOD": 1,
+  "FairBot|PrudentBot": 1,
+  "CUPOD|CooperateBot": 1,
+  "CUPOD|DefectBot": 0,
+  "CUPOD|FairBot": 1,
+  "CUPOD|CUPOD": 0,
+  "CUPOD|PrudentBot": 1,
+  "PrudentBot|CooperateBot": 2,
+  "PrudentBot|DefectBot": 1,
+  "PrudentBot|FairBot": 1,
+  "PrudentBot|CUPOD": 1,
+  "PrudentBot|PrudentBot": 1
+ },
+ "agents": [
+  "CooperateBot",
+  "DefectBot",
+  "FairBot",
+  "CUPOD",
+  "PrudentBot"
+ ],
+ "known_checks": [
+  {
+   "pair": "FairBot vs FairBot",
+   "expected": "CC",
+   "got": "CC",
+   "ok": true
+  },
+  {
+   "pair": "FairBot vs DefectBot",
+   "expected": "DD",
+   "got": "DD",
+   "ok": true
+  },
+  {
+   "pair": "FairBot vs CooperateBot",
+   "expected": "CC",
+   "got": "CC",
+   "ok": true
+  },
+  {
+   "pair": "PrudentBot vs PrudentBot",
+   "expected": "CC",
+   "got": "CC",
+   "ok": true
+  },
+  {
+   "pair": "PrudentBot vs FairBot",
+   "expected": "CC",
+   "got": "CC",
+   "ok": true
+  },
+  {
+   "pair": "PrudentBot vs CooperateBot",
+   "expected": "DC",
+   "got": "DC",
+   "ok": true
+  },
+  {
+   "pair": "PrudentBot vs DefectBot",
+   "expected": "DD",
+   "got": "DD",
+   "ok": true
+  },
+  {
+   "pair": "DUPOC vs DUPOC",
+   "expected": "CC",
+   "got": "CC",
+   "ok": true
+  },
+  {
+   "pair": "CUPOD vs CUPOD",
+   "expected": "DD",
+   "got": "DD",
+   "ok": true
+  }
+ ],
+ "dupoc_vs_cupod": {
+  "outcome": "DC",
+  "stable_from_world": 1,
+  "equations": {
+   "CUPOD vs DUPOC": "\u00ac\u25a1\u00acDUPOC|CUPOD",
+   "DUPOC vs CUPOD": "\u25a1CUPOD|DUPOC"
+  }
+ }
+}
