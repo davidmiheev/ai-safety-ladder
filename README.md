@@ -105,7 +105,7 @@ tests/                 smoke tests for the toolchain
 - [x] Induction head in GPT-2 small via attention patterns + activation patching (Olsson et al., 2022) — `01_mech_interp/01_induction_heads.py`
 - [x] Toy ReLU model: superposition phase-change plot (Elhage et al., 2022) — `01_mech_interp/02_toy_superposition.py`
 - [ ] Train your own SAE on one GPT-2 small layer; interpret 5 features — `01_mech_interp/03_train_sae.py` (GPU), `notes/sae_features_trained.md`
-- [ ] *Original:* hand-trace a single-token completion circuit with activation/path patching
+- [ ] *Original:* hand-trace a single-token completion circuit with activation/path patching — scaffold + method: `01_mech_interp/04_trace_circuit.{py,md}`, toolkit `src/ladder/patching.py`
 
 ### 3 · Math for AI Safety — Worked Problems
 - [ ] Modular addition: recover the Fourier embedding structure

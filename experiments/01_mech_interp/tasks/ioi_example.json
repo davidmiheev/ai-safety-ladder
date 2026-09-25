@@ -1,0 +1,11 @@
+{
+  "name": "ioi_example",
+  "model": "gpt2-small",
+  "_note": "Tooling sanity check on the already-solved IOI circuit (Wang et al., 2022). Card 2.4 asks for a behaviour of your own.",
+  "pairs": [
+    {"clean": "When Mary and John went to the store, John gave a drink to", "corrupt": "When Mary and John went to the store, Mary gave a drink to", "answer": " Mary", "wrong": " John"},
+    {"clean": "When Tom and James went to the park, James gave a ball to", "corrupt": "When Tom and James went to the park, Tom gave a ball to", "answer": " Tom", "wrong": " James"},
+    {"clean": "When Dan and Sid went to the shops, Sid gave an apple to", "corrupt": "When Dan and Sid went to the shops, Dan gave an apple to", "answer": " Dan", "wrong": " Sid"},
+    {"clean": "When Martin and Amy went to the park, Amy gave a drink to", "corrupt": "When Martin and Amy went to the park, Martin gave a drink to", "answer": " Martin", "wrong": " Amy"}
+  ]
+}
