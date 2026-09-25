@@ -1,0 +1,10 @@
+{
+  "tokens": 40000000,
+  "d_sae": 12288,
+  "k": 48,
+  "layer": 8,
+  "lr": 0.0003,
+  "seed": 42,
+  "minutes": 87.20371690591176,
+  "dataset": "apollo-research/Skylion007-openwebtext-tokenizer-gpt2"
+}

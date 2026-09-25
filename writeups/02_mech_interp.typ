@@ -167,11 +167,15 @@ $#fx(ih.corrupted_induction_attention)$ in the corrupted run), and $r$ (the pred
 
 #include "parts/02_superposition.typ"
 
+= Your own sparse autoencoder (card 2.3)
+
+#include "parts/02_sae.typ"
+
 = Remaining cards
 
 #status-table(
   (true, [2.1 Induction heads: attention scores, per-head and head-set patching, where-vs-what decomposition.]),
   (true, [2.2 Toy models of superposition: geometry, phase diagram, feature dimensionality.]),
-  ("partial", [2.3 Train an SAE on one GPT-2 small layer and interpret 5 features. Training on a Colab T4; section to follow.]),
+  ("partial", [2.3 SAE trained and compared with the pretrained one. Annotating 5 features by hand is yours (`notes/sae_features_trained.md`).]),
   (false, [2.4 _Original_: hand-trace one single-token completion circuit with activation/path patching. This is your card; the tooling in 2.1 is the starting point.]),
 )

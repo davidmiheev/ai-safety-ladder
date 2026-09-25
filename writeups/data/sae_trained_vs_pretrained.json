@@ -1,0 +1,420 @@
+{
+ "n_eval_tokens": 65024,
+ "ce_clean": 3.6319621950387955,
+ "ce_zero_ablation": 11.323735117912292,
+ "ours": {
+  "d_sae": 12288,
+  "l0": 48.0,
+  "explained_variance": 0.8559951593383286,
+  "ce_spliced": 3.729850620031357,
+  "ce_loss_recovered": 0.9872736200126938,
+  "dead_fraction": 0.003173828125,
+  "dense_fraction": 0.0013834635028615594,
+  "log10_freq_hist": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   19,
+   0,
+   30,
+   63,
+   48,
+   117,
+   197,
+   456,
+   869,
+   1382,
+   1455,
+   1571,
+   1467,
+   1199,
+   1172,
+   897,
+   616,
+   401,
+   164,
+   62,
+   31,
+   9,
+   13,
+   2,
+   1,
+   4,
+   1,
+   3
+  ]
+ },
+ "pretrained": {
+  "d_sae": 24576,
+  "l0": 66.76785492897034,
+  "explained_variance": 0.8512538541578731,
+  "ce_spliced": 3.7800270169973373,
+  "ce_loss_recovered": 0.9807502349012108,
+  "dead_fraction": 0.0003662109375,
+  "dense_fraction": 4.069010537932627e-05,
+  "log10_freq_hist": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   11,
+   0,
+   20,
+   88,
+   151,
+   405,
+   881,
+   2115,
+   3003,
+   3016,
+   2272,
+   2356,
+   2299,
+   2316,
+   2097,
+   1497,
+   1075,
+   632,
+   241,
+   71,
+   14,
+   6,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "matching": {
+  "hist": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   5,
+   14,
+   35,
+   48,
+   63,
+   91,
+   125,
+   172,
+   203,
+   261,
+   315,
+   332,
+   386,
+   400,
+   462,
+   483,
+   532,
+   572,
+   591,
+   667,
+   647,
+   635,
+   679,
+   611,
+   668,
+   628,
+   563,
+   539,
+   459,
+   412,
+   322,
+   223,
+   92,
+   14
+  ],
+  "median_max_cos": 0.664495050907135,
+  "frac_above_0.7": 0.42534083127975464,
+  "frac_above_0.9": 0.053147196769714355
+ },
+ "annotate": [
+  {
+   "feature": 1053,
+   "frequency": 0.0007228100393700788,
+   "closest_pretrained": 11510,
+   "closest_cos": 0.5378162860870361,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/11510",
+   "top_contexts": [
+    {
+     "act": 29.361318588256836,
+     "text": " Chicago Sun-Times 2013. All Rights Reserved. This material\u27e6 may\u27e7 not be published"
+    },
+    {
+     "act": 26.674911499023438,
+     "text": " Sun-Times 2013. All Rights Reserved. This material may\u27e6 not\u27e7 be published,"
+    },
+    {
+     "act": 25.94017219543457,
+     "text": "-Times 2013. All Rights Reserved. This material may not\u27e6 be\u27e7 published, broadcast"
+    },
+    {
+     "act": 8.310213088989258,
+     "text": " humanity, and there is great joy in that. This post\u27e6 may\u27e7 have made some"
+    },
+    {
+     "act": 8.186838150024414,
+     "text": "'ve got more newsletters we think you\u27e6'll\u27e7 find interesting."
+    },
+    {
+     "act": 7.677944660186768,
+     "text": ".[12]<|endoftext|>You must enter the characters with black color\u27e6 that\u27e7"
+    }
+   ]
+  },
+  {
+   "feature": 8569,
+   "frequency": 0.0003998523622047244,
+   "closest_pretrained": 10821,
+   "closest_cos": 0.5710294246673584,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/10821",
+   "top_contexts": [
+    {
+     "act": 20.924480438232422,
+     "text": ". 95 overall, the Lions picked up center Graham Glasgow from\u27e6 Michigan\u27e7. He's"
+    },
+    {
+     "act": 18.17245864868164,
+     "text": " next page.<|endoftext|>This is the first meeting of the Ethereum\u27e6 Michigan\u27e7 Meetup group"
+    },
+    {
+     "act": 16.62406349182129,
+     "text": " classified information.\"\u21b5\u21b5Chairman Carl Levin (D-\u27e6Mich\u27e7.) had had"
+    },
+    {
+     "act": 15.216645240783691,
+     "text": "ma mater both for medical and undergraduate school, the University of\u27e6 Michigan\u27e7, actually has"
+    },
+    {
+     "act": 9.178796768188477,
+     "text": "Shawn Robinson with the No. 46 overall pick, the\u27e6 Lions\u27e7 got one of"
+    },
+    {
+     "act": 8.582388877868652,
+     "text": " do it.\u21b5\u21b5At No. 95 overall, the\u27e6 Lions\u27e7 picked up center"
+    }
+   ]
+  },
+  {
+   "feature": 10550,
+   "frequency": 0.001030388779527559,
+   "closest_pretrained": 23879,
+   "closest_cos": 0.6251745223999023,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/23879",
+   "top_contexts": [
+    {
+     "act": 14.923553466796875,
+     "text": " the heart of\u27e6 all\u27e7 creation. Once"
+    },
+    {
+     "act": 9.690603256225586,
+     "text": " sermon. The whole novel is comprehended in the nexus of\u27e6 all\u27e7usion that makes"
+    },
+    {
+     "act": 9.225008964538574,
+     "text": " their lifetime. Although melanomas represent fewer than 5% of\u27e6 all\u27e7 skin cancers in"
+    },
+    {
+     "act": 8.4146089553833,
+     "text": " struggle against the effects of social power into an unintended war of\u27e6 all\u27e7 against all,"
+    },
+    {
+     "act": 8.053778648376465,
+     "text": " the conclusion of\u27e6 all\u27e7 objective analyses,"
+    },
+    {
+     "act": 7.246025085449219,
+     "text": " big chunk of change of the sort that cancer centers value above\u27e6 all\u27e7, money from"
+    }
+   ]
+  },
+  {
+   "feature": 8039,
+   "frequency": 0.001030388779527559,
+   "closest_pretrained": 7931,
+   "closest_cos": 0.7597936987876892,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/7931",
+   "top_contexts": [
+    {
+     "act": 35.51988983154297,
+     "text": "ope tells him so. To the applause of people with T\u27e6umb\u27e7lrs everywhere"
+    },
+    {
+     "act": 27.76668930053711,
+     "text": " Black Pool. Anhil's pl\u27e6umb\u27e7line snar"
+    },
+    {
+     "act": 27.22216796875,
+     "text": ".\u21b5\u21b5Nick Niedzwiadek pl\u27e6umb\u27e7ed the collection"
+    },
+    {
+     "act": 26.43282699584961,
+     "text": " a great philosopher who sought the meaning of existence, he pl\u27e6umb\u27e7ed the depths"
+    },
+    {
+     "act": 12.387680053710938,
+     "text": "\u21b5\u2013 Overhead presses. Back \u2013 Barbell rows,\u27e6 dumb\u27e7bell rows and"
+    },
+    {
+     "act": 11.483230590820312,
+     "text": " San Antonio Emanuel Ginobili \u963f\u6839\ufffd\u27e6\ufffd\u27e7\ufffd\u98de"
+    }
+   ]
+  },
+  {
+   "feature": 5318,
+   "frequency": 0.010134719488188976,
+   "closest_pretrained": 9937,
+   "closest_cos": 0.6299676895141602,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/9937",
+   "top_contexts": [
+    {
+     "act": 9.090651512145996,
+     "text": " half month journey from the Earth to Mars, and a return\u27e6 trip\u27e7 to Earth of"
+    },
+    {
+     "act": 8.923713684082031,
+     "text": " for the next ten years, except for a one-year\u27e6 tenure\u27e7 by Argentina."
+    },
+    {
+     "act": 8.842970848083496,
+     "text": " inside then outside before cutting\u27e6 again\u27e7 inside on his"
+    },
+    {
+     "act": 8.315143585205078,
+     "text": "ersjukhuset unit after it reopened in its new\u27e6 guise\u27e7"
+    },
+    {
+     "act": 8.27086353302002,
+     "text": " Saturday and Sunday nights were broadcast on NBCSN, and hours\u27e6 more\u27e7 were streamed online"
+    },
+    {
+     "act": 7.915802955627441,
+     "text": ". Maybe I missed the touch target? So I pressed it\u27e6 again\u27e7. Same result"
+    }
+   ]
+  },
+  {
+   "feature": 5390,
+   "frequency": 0.0013072096456692914,
+   "closest_pretrained": 4994,
+   "closest_cos": 0.7932864427566528,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/4994",
+   "top_contexts": [
+    {
+     "act": 14.651537895202637,
+     "text": " Harelbeke before claiming his first monument at the Tour\u27e6 of\u27e7 Flanders in"
+    },
+    {
+     "act": 14.38713264465332,
+     "text": " political struggle against the effects of social power into an unintended war\u27e6 of\u27e7 all against all"
+    },
+    {
+     "act": 11.34618854522705,
+     "text": ".[18] The following year, the England v Scotland match\u27e6 of\u27e7 1967, which"
+    },
+    {
+     "act": 9.368142127990723,
+     "text": " here to last.\u21b5\u21b5What might account for a change\u27e6 of\u27e7 this sort?"
+    },
+    {
+     "act": 9.22740364074707,
+     "text": " event\u27e6 of\u27e7 our time."
+    },
+    {
+     "act": 9.173256874084473,
+     "text": " approved its $154 billion second stimulus package in its last vote\u27e6 of\u27e7 2009, little"
+    }
+   ]
+  },
+  {
+   "feature": 1093,
+   "frequency": 0.000968873031496063,
+   "closest_pretrained": 8900,
+   "closest_cos": 0.896992027759552,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/8900",
+   "top_contexts": [
+    {
+     "act": 28.902278900146484,
+     "text": " of proposed witnesses who were not registered voters of the precincts as\u27e6 stated\u27e7 in his list"
+    },
+    {
+     "act": 28.45232391357422,
+     "text": " they produce, what they procure in trade for those technologies and\u27e6 stated\u27e7 that they had"
+    },
+    {
+     "act": 26.227176666259766,
+     "text": " has been vindicated this week.\u21b5\u21b5The commission has\u27e6 stated\u27e7 it is uncon"
+    },
+    {
+     "act": 24.40034294128418,
+     "text": " mentioned Hartwig or Truitt by name. The reporters later\u27e6 stated\u27e7 that the information"
+    },
+    {
+     "act": 23.531108856201172,
+     "text": " support both proactive and reactive public communications strategies,\u201d officials\u27e6 stated\u27e7 in the statement"
+    },
+    {
+     "act": 21.53963851928711,
+     "text": " and testimony.\u21b5\u21b5Such city settlements usually include a clause\u27e6 stating\u27e7 that both sides"
+    }
+   ]
+  },
+  {
+   "feature": 9506,
+   "frequency": 0.0006920521653543307,
+   "closest_pretrained": 21531,
+   "closest_cos": 0.650312066078186,
+   "neuronpedia_closest": "https://www.neuronpedia.org/gpt2-small/8-res-jb/21531",
+   "top_contexts": [
+    {
+     "act": 34.716678619384766,
+     "text": " above the headlines\u21b5\u21b5By 2009, Boonen was\u27e6 no\u27e7 longer the new"
+    },
+    {
+     "act": 33.39077377319336,
+     "text": " fundamentally altered with the reliance on threes; big men are\u27e6 no\u27e7 longer valued for"
+    },
+    {
+     "act": 30.044780731201172,
+     "text": " you keep changing the essential nature of the game, it's\u27e6 no\u27e7 longer basketball;"
+    },
+    {
+     "act": 29.919946670532227,
+     "text": "kins@breitbart.com.<|endoftext|>It\u2019s\u27e6 no\u27e7 doubt overly optimistic"
+    },
+    {
+     "act": 29.68392562866211,
+     "text": " in the relation of subjects to it, the State would be\u27e6 no\u27e7 longer king."
+    },
+    {
+     "act": 29.620859146118164,
+     "text": " be a ready-made vehicle for proving he or she is\u27e6 no\u27e7 wimp,"
+    }
+   ]
+  }
+ ]
+}

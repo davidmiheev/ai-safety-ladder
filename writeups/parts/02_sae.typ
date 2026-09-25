@@ -60,9 +60,22 @@ $"match"(i) = max_j cos(d_i, d'_j)$.
 
 #let M = S.matching
 #finding[
-  *Agreement between dictionaries:* the median of our features' best cosine to a pretrained
-  feature is #fx(M.median_max_cos); #pct(M.at("frac_above_0.7")) of them have a pretrained
-  counterpart above $0.7$ and #pct(M.at("frac_above_0.9")) above $0.9$.
+  - *As good at half the size.* With half the dictionary ($#O.d_sae$ vs $#P.d_sae$) and fewer
+    active features per token ($L_0 = #fx(O.l0, d: 0)$ vs $#fx(P.l0, d: 0)$), our TopK SAE matches
+    the pretrained L1 SAE: explained variance #fx(O.explained_variance, d: 3) vs
+    #fx(P.explained_variance, d: 3), CE loss recovered #fx(O.ce_loss_recovered, d: 3) vs
+    #fx(P.ce_loss_recovered, d: 3). This is consistent with TopK's better sparsity–fidelity
+    trade-off (Gao et al., 2024), but it is one run with one seed.
+  - *Healthy dictionary.* #pct(O.dead_fraction, d: 1) of our features never fired on the
+    held-out tokens. Our features fire more often (the density histogram sits to the right),
+    as expected when half as many features must cover the same activations.
+  - *The two dictionaries only partly agree.* The median best-match cosine is
+    #fx(M.median_max_cos). #pct(M.at("frac_above_0.7")) of our features have a pretrained
+    counterpart above $0.7$, but only #pct(M.at("frac_above_0.9")) above $0.9$. Two
+    independently trained SAEs of similar quality therefore carve the same activations into
+    substantially different features. Size differences explain part of it (a 24k dictionary can
+    split what a 12k one merges), and are the first thing to check against Neuronpedia when you
+    annotate the features below.
 ]
 
 == Features to annotate
