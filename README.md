@@ -45,7 +45,9 @@ uv run python scripts/build_writeups.py 02     # one section
 
 Everything in `00_setup` runs on CPU. From section 2 on (training SAEs, sleeper-agent
 fine-tuning) you'll want a GPU. The Colab and Kaggle MCP servers come from
-[ds-agent](https://github.com/davidmiheev/ds-agent) and are declared in `.mcp.json`:
+[ds-agent](https://github.com/davidmiheev/ds-agent) and are declared in `.mcp.json`. They are not
+enabled in `.claude/settings.json`: locally, approve them when Claude Code asks (or add
+`"enabledMcpjsonServers": ["colab", "kaggle"]` to `.claude/settings.local.json`):
 
 | Server | Use it for |
 |--------|------------|
@@ -71,9 +73,13 @@ Gotchas (verified 2026-09):
   npm behind TLS-intercepting proxies).
 - Release runtimes with `colab_stop` when idle; they burn compute units.
 
-For cloud sessions, add `COLAB_TOKEN_JSON` and `KAGGLE_API_TOKEN` as environment secrets. The
-SessionStart hook (`.claude/settings.json` → `scripts/session_start.sh`) runs `uv sync` and
-`setup_gpu_mcp.sh` on every fresh cloud container (~17s cold, ~2s warm); it is a no-op locally.
+For cloud sessions, add `COLAB_TOKEN_JSON` and `KAGGLE_API_TOKEN` as environment variables, and
+register the servers in the cloud environment's setup script (user scope, before the session
+starts). Don't enable the `.mcp.json` copies there: a project server overrides a user server of
+the same name, and its venv under `external/` doesn't exist yet when servers launch at startup,
+so `colab` and `kaggle` fail with ENOENT. The SessionStart hook (`.claude/settings.json` →
+`scripts/session_start.sh`) still runs `uv sync` and `setup_gpu_mcp.sh` on every fresh cloud
+container (~17s cold, ~2s warm); it is a no-op locally.
 
 ## Layout
 
